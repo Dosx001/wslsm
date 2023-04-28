@@ -1,0 +1,19 @@
+{
+  "globals": {
+    "browser": "readonly"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": "tsconfig.json"
+      }
+    }
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["solid"],
+  "extends": ["eslint:recommended", "plugin:solid/recommended"],
+  "rules": {}
+}
