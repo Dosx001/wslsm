@@ -1,9 +1,19 @@
-import type { Component } from 'solid-js';
-
-import logo from './logo.svg';
-import styles from './App.module.css';
+import { Component } from "solid-js";
+import styles from "./App.module.css";
+import logo from "./logo.svg";
 
 const App: Component = () => {
+  const socket = new WebSocket("ws://127.0.0.1:9001");
+  socket.addEventListener("open", () => {
+    console.log("WebSocket connection established.");
+    socket.send("Hello, server!");
+  });
+  socket.addEventListener("message", (ev) => {
+    console.log(`Message from server: ${ev.data}`);
+  });
+  socket.addEventListener("close", () => {
+    console.log("WebSocket connection closed.");
+  });
   return (
     <div class={styles.App}>
       <header class={styles.header}>
@@ -11,14 +21,13 @@ const App: Component = () => {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => {
+            socket.send("New message");
+          }}
         >
-          Learn Solid
-        </a>
+          send message
+        </button>
       </header>
     </div>
   );
