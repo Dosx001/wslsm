@@ -1,6 +1,7 @@
 use std::net::TcpListener;
+use std::process::Command;
 use std::thread::spawn;
-use tungstenite::accept;
+use tungstenite::{accept, Message};
 
 /// A WebSocket echo server
 fn main() {
@@ -11,7 +12,10 @@ fn main() {
             loop {
                 let msg = websocket.read_message().unwrap();
                 if msg.is_binary() || msg.is_text() {
-                    websocket.write_message(msg).unwrap();
+                    let output = Command::new("./bin/cpu_freq").output().unwrap();
+                    let message =
+                        Message::Text(String::from_utf8_lossy(&output.stdout).to_string());
+                    websocket.write_message(message).unwrap();
                 }
             }
         });
