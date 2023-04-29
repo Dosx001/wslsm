@@ -1,3 +1,4 @@
+use serde_json::{json, Value};
 use std::net::TcpListener;
 use std::process::Command;
 use std::thread::spawn;
@@ -15,7 +16,11 @@ fn main() {
                     _ => String::new(),
                 };
                 let output = Command::new(format!("./bin/{}", msg_str)).output().unwrap();
-                let message = Message::Text(String::from_utf8_lossy(&output.stdout).to_string());
+                let data: Value = json!({
+                    "type": msg_str,
+                    "data": String::from_utf8_lossy(&output.stdout).to_string(),
+                });
+                let message = Message::Text(data.to_string());
                 websocket.write_message(message).unwrap();
             }
         });

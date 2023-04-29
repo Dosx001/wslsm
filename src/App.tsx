@@ -7,7 +7,12 @@ const App: Component = () => {
     socket.send("cpu_usage");
   });
   socket.addEventListener("message", (ev) => {
-    setCpufequ(ev.data);
+    const resp = JSON.parse(ev.data);
+    switch (resp.type) {
+      case "cpu_usage":
+        setCpufequ(resp.data);
+        break;
+    }
   });
   socket.addEventListener("close", () => {
     console.debug("WebSocket connection closed.");
