@@ -1,33 +1,22 @@
-import { Component } from "solid-js";
-import logo from "./logo.svg";
+import { Component, createSignal, onCleanup } from "solid-js";
 
 const App: Component = () => {
+  const [cpufequ, setCpufequ] = createSignal("");
   const socket = new WebSocket("ws://127.0.0.1:9001");
   socket.addEventListener("open", () => {
-    console.log("WebSocket connection established.");
-    socket.send("Hello, server!");
+    socket.send("cpu_usage");
   });
   socket.addEventListener("message", (ev) => {
-    console.log(`Message from server: ${ev.data}`);
+    setCpufequ(ev.data);
   });
   socket.addEventListener("close", () => {
-    console.log("WebSocket connection closed.");
+    console.debug("WebSocket connection closed.");
   });
+  const id = setInterval(() => socket.send("cpu_usage"), 250);
+  onCleanup(() => clearInterval(id));
   return (
-    <div class="App">
-      <header class="header">
-        <img src={logo} class="logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <button
-          onClick={() => {
-            socket.send("New message");
-          }}
-        >
-          send message
-        </button>
-      </header>
+    <div>
+      <p>Avg CPU usage: {cpufequ()}%</p>
     </div>
   );
 };
