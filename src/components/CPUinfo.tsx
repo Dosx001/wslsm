@@ -8,6 +8,7 @@ const CPUinfo = () => {
   createEffect(() => {
     const width = 500;
     const height = 300;
+    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
     const svg = d3
       .select(div)
       .append("svg")
@@ -16,19 +17,34 @@ const CPUinfo = () => {
     const xScale = d3
       .scaleLinear()
       .domain([0, data.length - 1])
-      .range([0, width]);
-    const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+      .range([margin.left, width - margin.right]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, 100])
+      .range([height - margin.bottom, margin.top]);
     const line = d3
       .line()
       .x((_, i) => xScale(i))
       .y((d) => yScale(d));
     svg
-      .append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", line);
+      .append("g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(
+        d3
+          .axisLeft(yScale)
+          .ticks(10)
+          .tickFormat((d) => `${d}%`)
+      )
+      .selectAll("line")
+      .attr("stroke", "lightgray")
+      .attr("stroke-opacity", 0.7);
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
+      .call(d3.axisBottom(xScale).ticks(10))
+      .selectAll("line")
+      .attr("stroke", "lightgray")
+      .attr("stroke-opacity", 0.7);
     const addDataPoint = () => {
       xScale.domain([0, data.length - 1]);
       yScale.domain([0, 100]);
