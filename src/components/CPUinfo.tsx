@@ -16,7 +16,7 @@ const CPUinfo = () => {
       .attr("height", height);
     const xScale = d3
       .scaleLinear()
-      .domain([0, data.length - 1])
+      .domain([0, 100])
       .range([margin.left, width - margin.right]);
     const yScale = d3
       .scaleLinear()
@@ -48,7 +48,7 @@ const CPUinfo = () => {
     const addDataPoint = () => {
       xScale.domain([0, data.length - 1]);
       yScale.domain([0, 100]);
-      svg.select("path").datum(data).attr("d", line);
+      svg.select("path").datum(data).attr("d", line).attr("stroke", "blue");
     };
     const socket = new WebSocket("ws://127.0.0.1:9001");
     socket.addEventListener("open", () => {
