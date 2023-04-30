@@ -45,6 +45,30 @@ const CPUinfo = () => {
       .selectAll("line")
       .attr("stroke", "lightgray")
       .attr("stroke-opacity", 0.7);
+    svg
+      .selectAll(".hline")
+      .data(d3.range(0, 101, 10))
+      .enter()
+      .append("line")
+      .attr("class", "hline")
+      .attr("x1", margin.left)
+      .attr("x2", width - margin.right)
+      .attr("y1", (d) => yScale(d))
+      .attr("y2", (d) => yScale(d))
+      .attr("stroke", "lightgray")
+      .attr("stroke-opacity", 0.7);
+    svg
+      .selectAll(".vline")
+      .data(d3.range(0, 101, 10))
+      .enter()
+      .append("line")
+      .attr("class", "vline")
+      .attr("x1", (d) => xScale(d))
+      .attr("x2", (d) => xScale(d))
+      .attr("y1", margin.top)
+      .attr("y2", height - margin.bottom)
+      .attr("stroke", "lightgray")
+      .attr("stroke-opacity", 0.7);
     const addDataPoint = () => {
       xScale.domain([0, data.length - 1]);
       yScale.domain([0, 100]);
