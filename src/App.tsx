@@ -1,8 +1,8 @@
 import { Component, createSignal, onCleanup } from "solid-js";
+import CPUinfo from "./components/CPUinfo";
 import Graph from "./Graph";
 
 const App: Component = () => {
-  const [cpufequ, setCpufequ] = createSignal("");
   const [totalMem, setTotalMem] = createSignal("");
   const [usedMem, setUsedMem] = createSignal("");
   const socket = new WebSocket("ws://127.0.0.1:9001");
@@ -14,9 +14,6 @@ const App: Component = () => {
   socket.addEventListener("message", (ev) => {
     const resp = JSON.parse(ev.data);
     switch (resp.type) {
-      case "cpu_usage":
-        setCpufequ(resp.data);
-        break;
       case "total_mem":
         setTotalMem(resp.data);
         break;
@@ -35,10 +32,10 @@ const App: Component = () => {
   onCleanup(() => clearInterval(id));
   return (
     <div>
-      <p>Avg CPU usage: {cpufequ()}%</p>
       <p>Total memory: {totalMem()}GB</p>
       <p>Used memory: {usedMem()}GB</p>
       <Graph />
+      <CPUinfo />
     </div>
   );
 };
