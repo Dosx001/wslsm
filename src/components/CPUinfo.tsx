@@ -5,6 +5,12 @@ const CPUinfo = () => {
   const [cpufequ, setCpufequ] = createSignal("");
   let div!: HTMLDivElement;
   const data: number[] = [];
+  const socket = new WebSocket("ws://127.0.0.1:9001");
+  socket.addEventListener("open", () => {
+    setInterval(() => {
+      socket.send("cpu_usage");
+    }, 250);
+  });
   createEffect(() => {
     const width = 500;
     const height = 300;
@@ -74,10 +80,6 @@ const CPUinfo = () => {
       yScale.domain([0, 100]);
       svg.select("path").datum(data).attr("d", line).attr("stroke", "blue");
     };
-    const socket = new WebSocket("ws://127.0.0.1:9001");
-    socket.addEventListener("open", () => {
-      socket.send("cpu_usage");
-    });
     socket.addEventListener("message", (ev) => {
       const resp = JSON.parse(ev.data);
       switch (resp.type) {
@@ -89,9 +91,6 @@ const CPUinfo = () => {
           break;
       }
     });
-    setInterval(() => {
-      socket.send("cpu_usage");
-    }, 250);
   });
   return (
     <div class="ml-10 w-fit rounded bg-gray-600 shadow shadow-black" ref={div}>

@@ -1,4 +1,4 @@
-import { Component, createSignal, onCleanup } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import CPUinfo from "./components/CPUinfo";
 
 const App: Component = () => {
@@ -7,7 +7,9 @@ const App: Component = () => {
   const socket = new WebSocket("ws://127.0.0.1:9001");
   socket.addEventListener("open", () => {
     socket.send("total_mem");
-    socket.send("used_mem");
+    setInterval(() => {
+      socket.send("used_mem");
+    }, 250);
   });
   socket.addEventListener("message", (ev) => {
     const resp = JSON.parse(ev.data);
@@ -20,13 +22,6 @@ const App: Component = () => {
         break;
     }
   });
-  socket.addEventListener("close", () => {
-    console.debug("WebSocket connection closed.");
-  });
-  const id = setInterval(() => {
-    socket.send("used_mem");
-  }, 250);
-  onCleanup(() => clearInterval(id));
   return (
     <div>
       <p>Total memory: {totalMem()}GB</p>
