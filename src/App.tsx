@@ -1,4 +1,5 @@
 import { Component, createSignal, onCleanup } from "solid-js";
+import Graph from "./Graph";
 
 const App: Component = () => {
   const [cpufequ, setCpufequ] = createSignal("");
@@ -37,6 +38,7 @@ const App: Component = () => {
       <p>Avg CPU usage: {cpufequ()}%</p>
       <p>Total memory: {totalMem()}GB</p>
       <p>Used memory: {usedMem()}GB</p>
+      <Graph />
     </div>
   );
 };
