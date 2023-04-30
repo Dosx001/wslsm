@@ -1,5 +1,6 @@
 import { Component, createSignal } from "solid-js";
 import CPUinfo from "./components/CPUinfo";
+import Memory from "./components/Memory";
 
 const App: Component = () => {
   const [totalMem, setTotalMem] = createSignal("");
@@ -27,6 +28,7 @@ const App: Component = () => {
       <p>Total memory: {totalMem()}GB</p>
       <p>Used memory: {usedMem()}GB</p>
       <CPUinfo />
+      <Memory />
     </div>
   );
 };
