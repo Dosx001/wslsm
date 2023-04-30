@@ -1,8 +1,17 @@
 import * as d3 from "d3";
-import { createEffect } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 
 const Memory = () => {
   let div!: HTMLDivElement;
+  const [totalMem, setTotalMem] = createSignal(16);
+  const [usedMem, setUsedMem] = createSignal(0);
+  const socket = new WebSocket("ws://127.0.0.1:9001");
+  socket.onopen = () => {
+    socket.send("total_mem");
+    setInterval(() => {
+      socket.send("used_mem");
+    }, 250);
+  };
   createEffect(() => {
     let width = 100;
     let height = 200;
@@ -11,7 +20,7 @@ const Memory = () => {
       .append("svg")
       .attr("width", width)
       .attr("height", height);
-    let yScale = d3.scaleLinear().domain([0, 100]).range([190, 5]);
+    let yScale = d3.scaleLinear().domain([0, totalMem()]).range([190, 5]);
     let yAxis = d3.axisLeft(yScale);
     svg
       .append("g")
@@ -23,18 +32,35 @@ const Memory = () => {
       .attr("x", 0)
       .attr("y", 0)
       .attr("width", width / 2)
-      .attr("height", height)
+      .attr("height", 0)
       .attr("fill", "steelblue");
-    setInterval(() => {
-      let newHeight = Math.floor(Math.random() * 100);
-      svg
-        .select("rect")
-        .transition()
-        .attr("y", yScale(newHeight))
-        .attr("height", yScale(0) - yScale(newHeight));
-    }, 250);
+    socket.onmessage = (ev) => {
+      const resp = JSON.parse(ev.data);
+      switch (resp.type) {
+        case "total_mem":
+          setTotalMem(resp.data);
+          svg.remove();
+          break;
+        case "used_mem":
+          setUsedMem(resp.data);
+          svg
+            .select("rect")
+            .transition()
+            .attr("y", yScale(resp.data))
+            .attr("height", yScale(0) - yScale(resp.data));
+          break;
+      }
+    };
   });
-  return <div class="ml-10 mt-4" ref={div} />;
+  return (
+    <div
+      class="ml-10 mt-4 w-fit rounded bg-gray-600 p-1 shadow shadow-black"
+      ref={div}
+    >
+      <p>Memory</p>
+      <p>{usedMem()} GB</p>
+    </div>
+  );
 };
 
 export default Memory;
