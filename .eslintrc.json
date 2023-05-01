@@ -1,19 +1,15 @@
 {
-  "globals": {
-    "browser": "readonly"
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "parserOptions": {
-        "project": "tsconfig.json"
-      }
-    }
-  ],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
   "plugins": ["solid"],
-  "extends": ["eslint:recommended", "plugin:solid/recommended"],
-  "rules": {}
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": ["eslint:recommended", "plugin:solid/typescript"],
+  "rules": {
+    "solid/reactivity": "warn",
+    "solid/no-destructure": "warn",
+    "solid/jsx-no-undef": "error"
+  }
 }
