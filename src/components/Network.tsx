@@ -12,7 +12,6 @@ const Network = () => {
   socket.onmessage = (ev) => {
     const resp = JSON.parse(ev.data);
     const data = resp.data.split(" ");
-    console.log(data);
     if (upload().first === 0) {
       setUpload({ first: data[1], second: data[1] });
       setDownload({ first: data[0], second: data[0] });

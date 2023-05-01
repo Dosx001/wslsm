@@ -58,7 +58,7 @@ const Memory = () => {
       ref={div}
     >
       <p class="text-2xl">Memory</p>
-      <p>{usedMem()} GB</p>
+      <p class="text-green-500">{usedMem()} GB</p>
     </div>
   );
 };
