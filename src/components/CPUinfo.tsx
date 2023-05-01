@@ -75,11 +75,17 @@ const CPUinfo = () => {
       .attr("y2", height - margin.bottom)
       .attr("stroke", "lightgray")
       .attr("stroke-opacity", 0.7);
-    const addDataPoint = () => {
-      xScale.domain([0, data.length - 1]);
-      yScale.domain([0, 100]);
-      svg.select("path").datum(data).attr("d", line).attr("stroke", "blue");
-    };
+    svg
+      .append("g")
+      .attr("class", "data-group")
+      .call((group) => {
+        group
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "blue")
+          .attr("stroke-width", 2);
+      });
     socket.addEventListener("message", (ev) => {
       const resp = JSON.parse(ev.data);
       switch (resp.type) {
@@ -87,7 +93,14 @@ const CPUinfo = () => {
           setCpufequ(resp.data);
           if (data.length === 100) data.shift();
           data.push(resp.data);
-          addDataPoint();
+          xScale.domain([0, data.length - 1]);
+          yScale.domain([0, 100]);
+          svg
+            .select(".data-group")
+            .datum(data)
+            .call((group) => {
+              group.select("path").attr("d", line).attr("stroke", "blue");
+            });
           break;
       }
     });
