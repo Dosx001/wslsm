@@ -94,7 +94,7 @@ const CPUinfo = () => {
   });
   return (
     <div class="ml-10 w-fit rounded bg-gray-600 shadow shadow-black" ref={div}>
-      <p class="ml-40">Avg CPU usage: {cpufequ()}%</p>
+      <p class="ml-32 pt-2 text-2xl">Avg CPU Usage: {cpufequ()}%</p>
     </div>
   );
 };

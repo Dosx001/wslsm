@@ -54,10 +54,10 @@ const Memory = () => {
   });
   return (
     <div
-      class="ml-10 mt-4 w-fit rounded bg-gray-600 p-1 shadow shadow-black"
+      class="ml-10 mt-4 w-fit rounded bg-gray-600 px-4 py-2 shadow shadow-black"
       ref={div}
     >
-      <p>Memory</p>
+      <p class="text-2xl">Memory</p>
       <p>{usedMem()} GB</p>
     </div>
   );
